@@ -37,6 +37,8 @@ public class Solution
 			}
 			if (!check)
 				return false;
+			if (j == size)
+				return true;
 			i = j;
 		}
 		return check;
