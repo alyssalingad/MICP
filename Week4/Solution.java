@@ -24,22 +24,24 @@ public class Solution
 		int size = str.length();
 		String s = str.toLowerCase();
 		boolean check = false;
+		int lastFound = 0;
 		while (i < size){
-			int j = i + 2;
+			int j = i;
 			check = false; 
-			while (j < size+1){
-				//System.out.println(s.substring(i, j));
-				if (d.contains(s.substring(i, j))){
+			while (j < size){
+				if (d.contains(s.substring(i, j+1)) || d.contains(s.substring(lastFound, j+1))){
 					check = true;
+					lastFound = i;
 					break;
 				}
 				j++;
 			}
 			if (!check)
 				return false;
-			if (j == size)
+			if (j == size){
 				return true;
-			i = j;
+			}
+			i = j + 1;
 		}
 		return check;
 	}
@@ -49,6 +51,13 @@ public class Solution
 		HashSet<String> d = new HashSet<String>();
 		d.add("pear");
 		assertEquals(null, canBeSegmented(null, d));
+	}
+	
+	@Test
+	public void testStringLengthOne() throws Exception{
+		HashSet<String> d = new HashSet<String>();
+		d.add("a");
+		assertEquals(true, canBeSegmented("a", d));
 	}
 	
 	@Test
@@ -65,7 +74,7 @@ public class Solution
 	}
 	
 	@Test
-	public void testBasicCase() throws Exception{
+	public void testBothWordsInDict() throws Exception{
 		HashSet<String> d = new HashSet<String>();
 		d.add("you");
 		d.add("enjoy");
@@ -73,10 +82,49 @@ public class Solution
 	}
 	
 	@Test
+	public void testOneWordInDict() throws Exception{
+		HashSet<String> d = new HashSet<String>();
+		d.add("you");
+		d.add("enjoy");
+		assertEquals(true, canBeSegmented("enjoy", d));
+	}
+	
+	@Test
 	public void testSameWordMultipleTimes() throws Exception{
 		HashSet<String> d = new HashSet<String>();
 		d.add("hello");
-		assertEquals(true, canBeSegmented("HelloHello", d));
+		assertEquals(true, canBeSegmented("hellohello", d));
+	}
+	
+	@Test
+	public void testCapitalLetterInStr() throws Exception{
+		HashSet<String> d = new HashSet<String>();
+		d.add("hello");
+		assertEquals(true, canBeSegmented("hEllo", d));
+	}
+
+	@Test
+	public void testPluralAndSingularFormInDict() throws Exception{
+		HashSet<String> d = new HashSet<String>();
+		d.add("pie");
+		d.add("pies");
+		assertEquals(true, canBeSegmented("piepies", d));
+	}
+	
+	@Test
+	public void testWordWithinWord() throws Exception{
+		HashSet<String> d = new HashSet<String>();
+		d.add("car");
+		d.add("carriage");
+		assertEquals(false, canBeSegmented("carcarriages", d));
+	}
+	
+	@Test
+	public void testSomeWordsInDictionary() throws Exception{
+		HashSet<String> d = new HashSet<String>();
+		d.add("monday");
+		d.add("tuesday");
+		assertEquals(false, canBeSegmented("mondaywednesdaytuesday", d));
 	}
 	
 	@Test
